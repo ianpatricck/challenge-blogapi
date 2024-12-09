@@ -28,7 +28,7 @@ class CommentController extends Controller
             $comment->save();
 
             return response()->json([
-                'message' => 'Comment added successfuly',
+                'message' => 'Seu comentário foi adicionado!',
             ], 201);
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()], 403);
