@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -49,7 +50,7 @@ class PostController extends Controller
         }
 
         try {
-            $postData = Post::find($postId);
+            $postData = Post::findOrFail($postId);
             $updatedPost = $postData->update([
                 'title' => $request->title,
                 'content' => $request->content,
@@ -59,8 +60,8 @@ class PostController extends Controller
                 'message' => 'Post atualizado com sucesso!',
                 'updated_post' => $updatedPost
             ], 201);
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 403);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['error' => 'Post não encontrado!'], 404);
         }
     }
 
@@ -79,25 +80,26 @@ class PostController extends Controller
     public function findOne(int $postId): JsonResponse
     {
         try {
-            $post = new PostResource(Post::find($postId));
+            $post = new PostResource(Post::findOrFail($postId));
             return response()->json([
                 'post' => $post
             ], 200);
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 404);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['error' => 'Post não encontrado!'], 404);
         }
     }
 
     public function deleteOne(Request $request, int $postId): JsonResponse
     {
         try {
-            $post = Post::find($postId);
+            $post = Post::findOrFail($postId);
             $post->delete();
+
             return response()->json([
                 'message' => 'Post deletado com sucesso!'
             ], 200);
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 404);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['error' => 'Post não encontrado!'], 404);
         }
     }
 }
