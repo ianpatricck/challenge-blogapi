@@ -11,6 +11,45 @@ use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
+    /**
+     * @OA\Post(
+     *      path="/posts/create",
+     *      summary="Create a post",
+     *      description="Create a post",
+     *      tags={"Posts"},
+     *      security={ {"sanctum": {} }},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="title",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     type="string"
+     *                 ),
+     *                 example={"title": "Hello World", "content": "First post"}
+     *             )
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response="201",
+     *          description="CREATED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="NOT FOUND",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      )
+     *  )
+     */
     public function create(Request $request): JsonResponse
     {
         $postValidated = Validator::make($request->all(), [
@@ -38,6 +77,51 @@ class PostController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *      path="/posts/update/{postId}",
+     *      summary="Update a post",
+     *      description="Update a post",
+     *      tags={"Posts"},
+     *      security={ {"sanctum": {} }},
+     *      @OA\Parameter(
+     *          in="path",
+     *          name="postId",
+     *          @OA\Schema(type="int"),
+     *          @OA\Examples(example="int", value="1", summary="An int Post ID.")
+     *      ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="title",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     type="string"
+     *                 ),
+     *                 example={"title": "Post updated", "content": "I updated this post"}
+     *             )
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response="201",
+     *          description="UPDATED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="NOT FOUND",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      )
+     *  )
+     */
     public function update(Request $request, int $postId): JsonResponse
     {
         $postValidated = Validator::make($request->all(), [
@@ -70,22 +154,64 @@ class PostController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *      path="/posts",
+     *      summary="Find all posts",
+     *      description="Find all posts",
+     *      tags={"Posts"},
+     *      @OA\Response(
+     *          response="200",
+     *          description="OK",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *  )
+     */
     public function findAll(): JsonResponse
     {
         try {
             $posts = Post::all();
             return response()->json([
                 'posts' => $posts
-            ], 201);
+            ], 200);
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()], 403);
         }
     }
 
+    /**
+     * @OA\Get(
+     *      path="/posts/{postId}",
+     *      summary="Find one post",
+     *      description="Find just one post record",
+     *      tags={"Posts"},
+     *      @OA\Parameter(
+     *          in="path",
+     *          name="postId",
+     *          @OA\Schema(type="int"),
+     *          @OA\Examples(example="int", value="1", summary="An int Post ID.")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="OK",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="NOT FOUND",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *  )
+     */
     public function findOne(int $postId): JsonResponse
     {
         try {
-
             $post = Post::find($postId);
 
             if (!$post) {
@@ -101,6 +227,35 @@ class PostController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *      path="/posts/delete/{postId}",
+     *      summary="Delete a post",
+     *      description="Delete a post",
+     *      tags={"Posts"},
+     *      security={ {"sanctum": {} }},
+     *      @OA\Parameter(
+     *          in="path",
+     *          name="postId",
+     *          @OA\Schema(type="int"),
+     *          @OA\Examples(example="int", value="1", summary="An int Post ID.")
+     *      ),
+     *      @OA\Response(
+     *          response="201",
+     *          description="UPDATED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="NOT FOUND",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      )
+     *  )
+     */
     public function deleteOne(Request $request, int $postId): JsonResponse
     {
         try {
