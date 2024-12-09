@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Like;
+use App\Models\Post;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,12 +23,18 @@ class LikeController extends Controller
 
         try {
 
+            $post = Post::find($request->post_id);
+
+            if(!$post) {
+                throw new ModelNotFoundException('Post especificado não foi encontrado', 404);
+            }
+
             $userLikedPostBefore = Like::where('user_id', auth()->user()->id)
                 ->where('post_id', $request->post_id)
                 ->first();
 
             if ($userLikedPostBefore) {
-                return response()->json(['message' => 'Você não pode curtir um post duas vezes!'], 403);
+                throw new \Exception('Você não pode curtir um post duas vezes!', 403);
             }
 
             $like = new Like();
@@ -38,7 +46,7 @@ class LikeController extends Controller
                 'message' => 'Você curtiu esse post!',
             ], 201);
         } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 403);
+            return response()->json(['error' => $exception->getMessage()], $exception->getCode());
         }
 
     }
