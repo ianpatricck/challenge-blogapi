@@ -10,6 +10,45 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    /**
+     *  @OA\Post(
+     *      path="/register",
+     *      summary="Creater user",
+     *      description="Register a user",
+     *      tags={"Users"}, 
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password_confirmation",
+     *                     type="string"
+     *                 ),
+     *                 example={"name": "John Smith", "email": "Johnsmith@mail.com", "password": "johnsmith12", "password_confirmation": "johnsmith12"}
+     *             )
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response="201",
+     *          description="CREATED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *  )
+     */
     public function register(Request $request): JsonResponse
     {
         $userValidated = Validator::make($request->all(), [
@@ -40,6 +79,37 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     *  @OA\Post(
+     *      path="/login",
+     *      summary="Authenticate user",
+     *      description="Authenticate a user registered",
+     *      tags={"Users"}, 
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string"
+     *                 ),
+     *                 example={"email": "Johnsmith@mail.com", "password": "johnsmith12"}
+     *             )
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="OK",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *  )
+     */
     public function login(Request $request): JsonResponse
     {
         $userValidated = Validator::make($request->all(), [
@@ -70,10 +140,43 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     *  @OA\Get(
+     *      path="/user",
+     *      summary="Find the authenticated user",
+     *      description="Find the current authenticated user",
+     *      security={ {"sanctum": {} }},
+     *      tags={"Users"}, 
+     *      @OA\Response(
+     *          response="200",
+     *          description="OK",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *  )
+     */
     public function findLoggedUser(Request $request): User
     {
         return $request->user();
     }
+
+    /**
+     *  @OA\Post(
+     *      path="/logout",
+     *      summary="Logout",
+     *      description="Log out the user",
+     *      security={ {"sanctum": {} }},
+     *      tags={"Users"}, 
+     *      @OA\Response(
+     *          response="200",
+     *          description="OK",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *  )
+     */
 
     public function logout(Request $request): JsonResponse
     {
