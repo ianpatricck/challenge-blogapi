@@ -143,6 +143,111 @@
                 ]
             }
         },
+        "/comments/create/{postId}": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Create a comment",
+                "description": "Create a comment",
+                "operationId": "bd0283d63904d32a190023c86eb1dfb7",
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "schema": {
+                            "type": "int"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int Post ID.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "comment": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "comment": "Nice post!"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "NOT FOUND",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/comments/delete/{commentId}": {
+            "delete": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Delete a comment",
+                "description": "Delete a comment",
+                "operationId": "7dd58def63f092fdf05bfbb8bef993b5",
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "schema": {
+                            "type": "int"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int Comment ID.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DELETED",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "NOT FOUND",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/posts/create": {
             "post": {
                 "tags": [
@@ -364,6 +469,10 @@
         {
             "name": "Users",
             "description": "Users"
+        },
+        {
+            "name": "Comments",
+            "description": "Comments"
         },
         {
             "name": "Posts",

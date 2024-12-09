@@ -12,6 +12,47 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class CommentController extends Controller
 {
+    /**
+     * @OA\Post(
+     *      path="/comments/create/{postId}",
+     *      summary="Create a comment",
+     *      description="Create a comment",
+     *      tags={"Comments"},
+     *      security={ {"sanctum": {} }},
+     *      @OA\Parameter(
+     *          in="path",
+     *          name="postId",
+     *          @OA\Schema(type="int"),
+     *          @OA\Examples(example="int", value="1", summary="An int Post ID.")
+     *      ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="comment",
+     *                     type="string"
+     *                 ),
+     *                 example={"comment": "Nice post!"}
+     *             )
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response="201",
+     *          description="CREATED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="NOT FOUND",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      )
+     *  )
+     */
     public function create(Request $request, int $postId): JsonResponse
     {
         $commentValidated = Validator::make($request->all(), [
@@ -23,7 +64,6 @@ class CommentController extends Controller
         }
 
         try {
-
             $post = Post::find($postId);
 
             if (!$post) {
@@ -44,6 +84,35 @@ class CommentController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *      path="/comments/delete/{commentId}",
+     *      summary="Delete a comment",
+     *      description="Delete a comment",
+     *      tags={"Comments"},
+     *      security={ {"sanctum": {} }},
+     *      @OA\Parameter(
+     *          in="path",
+     *          name="commentId",
+     *          @OA\Schema(type="int"),
+     *          @OA\Examples(example="int", value="1", summary="An int Comment ID.")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="DELETED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="NOT FOUND",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      )
+     *  )
+     */
     public function delete(int $commentId)
     {
         try {
@@ -64,6 +133,5 @@ class CommentController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()], $exception->getCode());
         }
-
     }
 }
