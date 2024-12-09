@@ -26,7 +26,7 @@ Route::delete('/posts/delete/{postId}', [PostController::class, 'deleteOne'])
 
 // CommentController API routes    
 Route::post('/comments/create', [CommentController::class, 'create'])
-    ->middleware('auth:santum');
+    ->middleware('auth:sanctum');
 
 // LikeController API routes  
 Route::post('/likes/create', [LikeController::class, 'create'])
