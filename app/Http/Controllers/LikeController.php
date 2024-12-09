@@ -11,6 +11,49 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class LikeController extends Controller
 {
+    /**
+     * @OA\Post(
+     *      path="/likes/create",
+     *      summary="Create a like",
+     *      description="Create a like",
+     *      tags={"Likes"},
+     *      security={ {"sanctum": {} }},
+     *
+     *      @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="post_id",
+     *                     type="integer"
+     *                 ),
+     *                 example={"post_id": 1}
+     *             )
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response="201",
+     *          description="CREATED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="NOT FOUND",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="403",
+     *          description="NOT ALLOWED",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *      )
+     *  )
+     */
     public function create(Request $request): JsonResponse
     {
         $likeValidated = Validator::make($request->all(), [
@@ -22,10 +65,9 @@ class LikeController extends Controller
         }
 
         try {
-
             $post = Post::find($request->post_id);
 
-            if(!$post) {
+            if (!$post) {
                 throw new ModelNotFoundException('Post especificado não foi encontrado', 404);
             }
 
@@ -48,6 +90,5 @@ class LikeController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()], $exception->getCode());
         }
-
     }
 }

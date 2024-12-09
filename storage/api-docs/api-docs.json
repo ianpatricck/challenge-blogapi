@@ -248,6 +248,58 @@
                 ]
             }
         },
+        "/likes/create": {
+            "post": {
+                "tags": [
+                    "Likes"
+                ],
+                "summary": "Create a like",
+                "description": "Create a like",
+                "operationId": "0dc338e2510cb44b94a88fc58430e74a",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "post_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "post_id": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "NOT FOUND",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "403": {
+                        "description": "NOT ALLOWED",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/posts/create": {
             "post": {
                 "tags": [
@@ -473,6 +525,10 @@
         {
             "name": "Comments",
             "description": "Comments"
+        },
+        {
+            "name": "Likes",
+            "description": "Likes"
         },
         {
             "name": "Posts",
