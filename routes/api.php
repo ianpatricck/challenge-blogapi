@@ -17,8 +17,6 @@ Route::post('/logout', [AuthController::class, 'logout'])
 // PostController API routes
 Route::get('/posts', [PostController::class, 'findAll']);
 Route::get('/posts/{postId}', [PostController::class, 'findOne']);
-
-// PostController API routes
 Route::post('/posts/create', [PostController::class, 'create'])
     ->middleware('auth:sanctum');
 Route::put('/posts/update/{postId}', [PostController::class, 'update'])
