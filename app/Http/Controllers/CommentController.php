@@ -34,4 +34,24 @@ class CommentController extends Controller
             return response()->json(['error' => $exception->getMessage()], 403);
         }
     }
+
+    public function delete(int $commentId)
+    {
+        try {
+            $comment = Comment::findOrFail($commentId)->first();
+            if ($comment && auth()->user()->id == $comment->user_id) {
+                $comment->delete();
+                return response()->json([
+                    'message' => 'Seu comentário foi deletado!',
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Não foi possível deletar este comentário!',
+                ], 403);
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Não foi possível encontrar este comentário'], 404);
+        }
+
+    }
 }
