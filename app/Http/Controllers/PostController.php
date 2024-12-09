@@ -50,7 +50,12 @@ class PostController extends Controller
         }
 
         try {
-            $postData = Post::findOrFail($postId);
+            $postData = Post::find($postId);
+
+            if (!$postData) {
+                throw new ModelNotFoundException('Post não encontrado!', 404);
+            }
+
             $updatedPost = $postData->update([
                 'title' => $request->title,
                 'content' => $request->content,
@@ -60,8 +65,8 @@ class PostController extends Controller
                 'message' => 'Post atualizado com sucesso!',
                 'updated_post' => $updatedPost
             ], 201);
-        } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Post não encontrado!'], 404);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 
@@ -80,26 +85,38 @@ class PostController extends Controller
     public function findOne(int $postId): JsonResponse
     {
         try {
+
+            $post = Post::find($postId);
+
+            if (!$post) {
+                throw new ModelNotFoundException('Post não encontrado', 404);
+            }
+
             $post = new PostResource(Post::findOrFail($postId));
             return response()->json([
                 'post' => $post
             ], 200);
-        } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Post não encontrado!'], 404);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 
     public function deleteOne(Request $request, int $postId): JsonResponse
     {
         try {
-            $post = Post::findOrFail($postId);
+            $post = Post::find($postId);
+
+            if (!$post) {
+                throw new ModelNotFoundException('Post não encontrado', 404);
+            }
+
             $post->delete();
 
             return response()->json([
                 'message' => 'Post deletado com sucesso!'
             ], 200);
-        } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Post não encontrado!'], 404);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 }
